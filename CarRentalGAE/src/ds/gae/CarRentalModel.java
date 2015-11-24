@@ -46,7 +46,7 @@ public class CarRentalModel {
 			query.setParameter("name", crcName);
 			CarRentalCompany comp = (CarRentalCompany) query.getResultList().get(0);
 			
-			List<CarType> result = (List<CarType>) comp.getAllCarTypes();
+			Collection<CarType> result = comp.getAllCarTypes();
 			for (CarType type: result) {
 				typeNames.add(type.getName());
 			}
