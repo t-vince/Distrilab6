@@ -158,8 +158,8 @@ public class CarRentalModel {
     					.setParameter("crcName", reservations.get(i).getRentalCompany());
     			CarRentalCompany crc = (CarRentalCompany)query.getSingleResult();
     			crc.cancelReservation(reservations.get(i));
+        		em.close();
     		}
-    		em.close();
 			throw e;
     	}
 		return reservations;
