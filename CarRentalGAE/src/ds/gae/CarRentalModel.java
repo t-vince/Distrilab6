@@ -44,7 +44,7 @@ public class CarRentalModel {
 			Set<String> typeNames = new HashSet<String>();
 			Query query = em.createQuery("SELECT crc FROM CarRentalCompany crc WHERE crc.name = :name");
 			query.setParameter("name", crcName);
-			CarRentalCompany comp = (CarRentalCompany) query.getResultList().get(0);
+			CarRentalCompany comp = (CarRentalCompany) query.getSingleResult();
 			
 			Collection<CarType> result = comp.getAllCarTypes();
 			for (CarType type: result) {
@@ -158,8 +158,9 @@ public class CarRentalModel {
     					.setParameter("crcName", reservations.get(i).getRentalCompany());
     			CarRentalCompany crc = (CarRentalCompany)query.getSingleResult();
     			crc.cancelReservation(reservations.get(i));
-    			throw e;
     		}
+    		em.close();
+			throw e;
     	}
 		return reservations;
     }
