@@ -14,13 +14,13 @@ public class Reservation extends Quote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
 	
-    private int carId;
+    private Key carId;
     
     /***************
 	 * CONSTRUCTOR *
 	 ***************/
 
-    Reservation(Quote quote, int carId) {
+    Reservation(Quote quote, Key carId) {
     	super(quote.getCarRenter(), quote.getStartDate(), quote.getEndDate(), 
     			quote.getRentalCompany(), quote.getCarType(), quote.getRentalPrice());
         this.carId = carId;
@@ -34,7 +34,7 @@ public class Reservation extends Quote {
     	return this.key;
     }
     
-    public int getCarId() {
+    public Key getCarId() {
     	return carId;
     }
     
@@ -52,7 +52,7 @@ public class Reservation extends Quote {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (int)(prime * result + carId);
+		result = (int)(prime * result + carId.getId());
 		return result;
 	}
 

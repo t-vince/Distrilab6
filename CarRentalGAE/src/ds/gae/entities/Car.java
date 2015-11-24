@@ -19,8 +19,6 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
     
-    private int id;
-    
     private String type;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Reservation> reservations;
@@ -29,19 +27,14 @@ public class Car {
      * CONSTRUCTOR *
      ***************/
     
-    public Car(String type, int id) {
+    public Car(String type) {
         this.type = type;
         this.reservations = new HashSet<Reservation>();
-        this.id = id;
     }
 
     /******
      * ID *
      ******/
-    
-    public int getId() {
-    	return id;
-    }
     
     public Key getKey() {
     	return key;

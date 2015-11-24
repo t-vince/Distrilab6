@@ -42,11 +42,12 @@ public class CarRentalModel {
 		EntityManager em = EMF.get().createEntityManager();
 		try{
 			Set<String> typeNames = new HashSet<String>();
-			Query query = em.createQuery("SELECT crc.cartypes FROM CarRentalCompany crc WHERE crc.name = :name");
+			Query query = em.createQuery("SELECT crc FROM CarRentalCompany crc WHERE crc.name = :name");
 			query.setParameter("name", crcName);
-			List<HashSet<CarType>> result = query.getResultList();
-			Set<CarType> types = result.get(0);
-			for (CarType type: types) {
+			CarRentalCompany comp = (CarRentalCompany) query.getResultList().get(0);
+			
+			List<CarType> result = (List<CarType>) comp.getAllCarTypes();
+			for (CarType type: result) {
 				typeNames.add(type.getName());
 			}
 			return typeNames;
@@ -145,9 +146,21 @@ public class CarRentalModel {
 	 */
     public List<Reservation> confirmQuotes(List<Quote> quotes) throws ReservationException {    	
     	List<Reservation> reservations = new ArrayList<Reservation>();
+    	try{
 		for(Quote quote : quotes){
 			reservations.add(confirmQuote(quote));
 		}
+    	}
+    	catch(ReservationException e){
+    		EntityManager em = EMF.get().createEntityManager();		
+    		for(int i = 0; i < reservations.size(); i++){
+        		Query query = em.createQuery("SELECT c FROM CarRentalCompany c WHERE c.name = :crcName")
+    					.setParameter("crcName", reservations.get(i).getRentalCompany());
+    			CarRentalCompany crc = (CarRentalCompany)query.getSingleResult();
+    			crc.cancelReservation(reservations.get(i));
+    			throw e;
+    		}
+    	}
 		return reservations;
     }
 	
@@ -219,7 +232,7 @@ public class CarRentalModel {
     public Collection<Integer> getCarIdsByCarType(String crcName, CarType carType) {
     	Collection<Integer> out = new ArrayList<Integer>();
     	for (Car c : getCarsByCarType(crcName, carType)) {
-    		out.add(c.getId());
+    		out.add((int) c.getKey().getId());
     	}
     	return out;
     }

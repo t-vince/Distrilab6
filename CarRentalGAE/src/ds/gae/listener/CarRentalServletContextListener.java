@@ -95,7 +95,7 @@ public class CarRentalServletContextListener implements ServletContextListener {
 			carTypes.add(type);
 			//create N new cars with given type, where N is the 5th field
 			for (int i = Integer.parseInt(csvReader.nextToken()); i > 0; i--) {
-				type.addCar(new Car(type.getName(), id++));
+				type.addCar(new Car(type.getName()));
 			}
 		}
 

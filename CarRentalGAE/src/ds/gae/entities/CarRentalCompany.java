@@ -90,12 +90,12 @@ public class CarRentalCompany {
 	 * CARS *
 	 *********/
 	
-	private Car getCar(int uid) {
+	private Car getCar(Key key2) {
 		for (Car car : getCars()) {
-			if (car.getId() == uid)
+			if (car.getKey() == key2)
 				return car;
 		}
-		throw new IllegalArgumentException("<" + name + "> No car with uid " + uid);
+		throw new IllegalArgumentException("<" + name + "> No car with uid " + key2);
 	}
 	
 	public Set<Car> getCars() {
@@ -150,7 +150,7 @@ public class CarRentalCompany {
 	                + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate());
 		Car car = availableCars.get((int)(Math.random()*availableCars.size()));
 		
-		Reservation res = new Reservation(quote, car.getId());
+		Reservation res = new Reservation(quote, car.getKey());
 		car.addReservation(res);
 		return res;
 	}
