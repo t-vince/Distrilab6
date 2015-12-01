@@ -26,7 +26,6 @@ public class CreateQuoteServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		        
         
 		try {
 			Date startDate = ViewTools.DATE_FORMAT.parse(req.getParameter("startDate"));
@@ -62,7 +61,5 @@ public class CreateQuoteServlet extends HttpServlet {
 			resp.sendRedirect(JSPSite.RESERVATION_ERROR.url());
 		}
 		
-		
 	}
-	
 }

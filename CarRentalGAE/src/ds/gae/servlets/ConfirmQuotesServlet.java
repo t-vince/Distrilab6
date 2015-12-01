@@ -32,22 +32,29 @@ public class ConfirmQuotesServlet extends HttpServlet {
 		HashMap<String, ArrayList<Quote>> allQuotes = (HashMap<String, ArrayList<Quote>>) session.getAttribute("quotes");
 
 		ArrayList<Quote> quotes = new ArrayList<Quote>();
-		
 		for (String crcName : allQuotes.keySet()) {
 			quotes.addAll(allQuotes.get(crcName));
 		}
 		
-		String load = new Gson().toJson(quotes);
+		// get session values
 		String sessionId = req.getSession().getId();
 		String username = (String) req.getSession().getAttribute("renter");
+		String email = (String) req.getSession().getAttribute("email");
+		String load = new Gson().toJson(quotes);
+		
+		// Queue using Google queue factory
 		Queue defaultQueue = QueueFactory.getDefaultQueue();
+		
 		defaultQueue.add(TaskOptions.Builder.withUrl("/worker").param("key", key)
-				.param("payload", load).param("ck", sessionId+username).param("renter", username));
+				.param("payload", load)
+				.param("ck", sessionId+username)
+				.param("renter", username)
+				.param("email", email));
 		
-		
+		// Clear the current quotes map
 		session.setAttribute("quotes", new HashMap<String, ArrayList<Quote>>());
 		
-		// TODO
+		// Note:
 		// If you wish confirmQuotesReply.jsp to be shown to the client as
 		// a response of calling this servlet, please replace the following line 
 		// with resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
