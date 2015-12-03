@@ -53,7 +53,8 @@ for (JSPSite site : JSPSite.publiclyLinkedValues()) {
 				<form method="POST" action="/login">
 				<div class="group">
 					<div class="form">
-						<span>Username: <input type="text" name="username" value="TestUser" size="10"></span>					
+						<span>Username: <input type="text" name="username" value="TestUser" size="10"></span>
+						<span>Email: <input type="text" name="email" value="TestUser@user.com" size="10"></span>			
 					</div>
 					<div class="formsubmit">
 						<input type="submit" value="Login" />

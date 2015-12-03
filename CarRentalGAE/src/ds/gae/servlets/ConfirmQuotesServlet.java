@@ -1,6 +1,8 @@
 package ds.gae.servlets;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,9 +15,9 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.repackaged.com.google.gson.Gson;
 
 import ds.gae.entities.Quote;
+import ds.gae.task.ConfirmQuotesTask;
 import ds.gae.view.JSPSite;
 
 @SuppressWarnings("serial")
@@ -38,18 +40,15 @@ public class ConfirmQuotesServlet extends HttpServlet {
 		
 		// get session values
 		String sessionId = req.getSession().getId();
-		String username = (String) req.getSession().getAttribute("renter");
+		String renter = (String) req.getSession().getAttribute("renter");
 		String email = (String) req.getSession().getAttribute("email");
-		String load = new Gson().toJson(quotes);
 		
 		// Queue using Google queue factory
 		Queue defaultQueue = QueueFactory.getDefaultQueue();
 		
-		defaultQueue.add(TaskOptions.Builder.withUrl("/worker").param("key", key)
-				.param("payload", load)
-				.param("ck", sessionId+username)
-				.param("renter", username)
-				.param("email", email));
+		defaultQueue.add(
+				TaskOptions.Builder.withPayload( new ConfirmQuotesTask(renter, email, quotes) )
+				);
 		
 		// Clear the current quotes map
 		session.setAttribute("quotes", new HashMap<String, ArrayList<Quote>>());
@@ -59,5 +58,14 @@ public class ConfirmQuotesServlet extends HttpServlet {
 		// a response of calling this servlet, please replace the following line 
 		// with resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
 		resp.sendRedirect(JSPSite.CREATE_QUOTES.url());
+	}
+	
+	// Small function to serialize objects
+	private byte[] serialize(Object obj) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+  	    ObjectOutputStream os = new ObjectOutputStream(out);
+  	    os.writeObject(obj);
+  	    
+  	    return out.toByteArray();
 	}
 }

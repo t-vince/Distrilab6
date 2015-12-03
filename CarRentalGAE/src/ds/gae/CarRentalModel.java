@@ -147,9 +147,9 @@ public class CarRentalModel {
     public List<Reservation> confirmQuotes(List<Quote> quotes) throws ReservationException {    	
     	List<Reservation> reservations = new ArrayList<Reservation>();
     	try{
-		for(Quote quote : quotes){
-			reservations.add(confirmQuote(quote));
-		}
+			for(Quote quote : quotes){
+				reservations.add(confirmQuote(quote));
+			}
     	}
     	catch(ReservationException e){
     		EntityManager em = EMF.get().createEntityManager();		
